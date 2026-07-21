@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trade class Team attendance</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --ink:#1a1330;
+    --ink-2:#2a1f47;
+    --paper:#fdfaf7;
+    --paper-2:#f4eefa;
+    --line:#e3d9ef;
+    --violet:#7c3aed;
+    --violet-dark:#5b21b6;
+    --teal:#0d9488;
+    --teal-light:#14b8a6;
+    --coral:#f43f5e;
+    --coral-dark:#be123c;
+    --gold:#f5a524;
+    --gold-dark:#c2760a;
+    --blue:#3b82f6;
+    --slate:#6d6480;
+    --green:#16a34a;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 10% 8%, rgba(124,58,237,.35), transparent 42%),
+      radial-gradient(circle at 90% 12%, rgba(244,63,94,.28), transparent 40%),
+      radial-gradient(circle at 25% 90%, rgba(13,148,136,.30), transparent 45%),
+      radial-gradient(circle at 85% 85%, rgba(245,165,36,.22), transparent 40%),
+      var(--ink);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    min-height:100vh;
+  }
+
+  .wrap{ max-width:1180px; margin:0 auto; padding:36px 24px 80px; }
+
+  header{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    margin-bottom:28px; color:var(--paper); flex-wrap:wrap; gap:16px;
+  }
+  h1{
+    font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:700; margin:0; letter-spacing:-.01em;
+    background:linear-gradient(90deg, #c4b5fd 0%, #fda4af 45%, #fcd34d 100%);
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;
+  }
+  .clock{ font-family:'IBM Plex Mono',monospace; text-align:right; }
+  .clock .time{
+    font-size:26px;font-weight:600;color:var(--paper);
+    text-shadow:0 0 18px rgba(124,58,237,.55);
+  }
+  .clock .date{font-size:12px;color:#c7bfe0;letter-spacing:.05em;}
+
+  .grid{ display:grid; grid-template-columns:340px 1fr; gap:20px; align-items:start; }
+  @media (max-width:860px){ .grid{grid-template-columns:1fr;} }
+
+  .panel{
+    background:var(--paper); border-radius:12px;
+    box-shadow: 0 24px 48px -20px rgba(0,0,0,.55);
+    border-top:4px solid var(--violet);
+    position:relative; overflow:hidden;
+  }
+  .leave-panel{ border-top-color:var(--teal-light); }
+  .admin-panel{ border-top-color:var(--gold); }
+
+  .stack{ display:flex; flex-direction:column; gap:20px; }
+
+  .punch-panel, .leave-panel{ padding:26px 24px 28px; }
+  .panel-label{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase;
+    color:var(--slate); margin:0 0 14px; display:flex; align-items:center; gap:8px; font-weight:600;
+  }
+  .punch-panel .panel-label{color:var(--violet-dark);}
+  .leave-panel .panel-label{color:var(--teal);}
+  .panel-label::after{ content:''; flex:1; height:1px; background:var(--line); }
+
+  select, input[type="text"], input[type="date"], input[type="email"], input[type="password"], textarea{
+    width:100%; font-family:'Inter',sans-serif; font-size:15px; padding:11px 12px;
+    border:1.5px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); margin-bottom:14px;
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  textarea{ resize:vertical; min-height:64px; font-family:'Inter',sans-serif; }
+  select:focus, input:focus, textarea:focus{
+    outline:none; border-color:var(--violet); box-shadow:0 0 0 3px rgba(124,58,237,.15);
+  }
+  button:focus-visible{ outline:2px solid var(--violet); outline-offset:2px; }
+
+  .id-chip{
+    font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--slate);
+    background:var(--paper-2); border:1px dashed #c9b8e6; border-radius:6px;
+    padding:8px 10px; margin-bottom:16px; min-height:16px;
+  }
+  .id-chip b{color:var(--violet-dark);}
+
+  .stamp-row{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:6px; }
+  .stamp-btn{
+    position:relative; font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:14px;
+    letter-spacing:.06em; text-transform:uppercase; padding:16px 8px; border-radius:8px;
+    border:none; cursor:pointer; color:#fff; overflow:hidden;
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .stamp-btn.in{ background:linear-gradient(135deg, var(--teal-light), var(--teal)); box-shadow:0 8px 20px -8px rgba(13,148,136,.7);}
+  .stamp-btn.out{ background:linear-gradient(135deg, #fb7185, var(--coral-dark)); box-shadow:0 8px 20px -8px rgba(244,63,94,.7);}
+  .stamp-btn:hover{transform:translateY(-2px);}
+  .stamp-btn:active{transform:translateY(1px) scale(.98);}
+  .stamp-btn:disabled{ opacity:.35; cursor:not-allowed; transform:none; box-shadow:none; }
+  .stamp-btn.stamped::after{
+    content:attr(data-stamp); position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:20px; letter-spacing:.15em; color:inherit; background:rgba(26,19,48,.92);
+    animation: stampfade 900ms ease forwards; transform:rotate(-8deg) scale(1.5); opacity:0;
+  }
+  @keyframes stampfade{
+    0%{opacity:0; transform:rotate(-8deg) scale(2);}
+    15%{opacity:1; transform:rotate(-8deg) scale(1);}
+    75%{opacity:1;}
+    100%{opacity:0;}
+  }
+
+  .status-line{ font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--slate); margin-top:12px; min-height:18px; }
+  .status-line.err{color:var(--coral-dark); font-weight:600;}
+  .status-line.ok{color:var(--teal); font-weight:600;}
+
+  .solid-btn{
+    font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:700; letter-spacing:.05em;
+    text-transform:uppercase; padding:13px; width:100%; border:none; border-radius:8px;
+    background:linear-gradient(135deg, var(--violet), var(--violet-dark)); color:#fff; cursor:pointer;
+    box-shadow:0 10px 22px -10px rgba(124,58,237,.7); transition:transform .12s ease;
+  }
+  .solid-btn:hover{ transform:translateY(-1px); }
+  .solid-btn.gold{ background:linear-gradient(135deg, var(--gold), var(--gold-dark)); box-shadow:0 10px 22px -10px rgba(194,118,10,.7); }
+  .solid-btn:disabled{ opacity:.4; cursor:not-allowed; transform:none; }
+
+  /* ---------- Admin panel ---------- */
+  .admin-panel{ padding:24px 24px 20px; min-height:220px; }
+  .admin-gate{ max-width:340px; margin:20px auto; text-align:center; padding:20px 0 6px; }
+  .admin-gate .lock{ font-size:30px; margin-bottom:6px; }
+  .admin-gate h2{
+    font-family:'IBM Plex Mono',monospace; font-size:15px; text-transform:uppercase;
+    letter-spacing:.08em; margin:0 0 18px; color:var(--gold-dark); font-weight:700;
+  }
+  .admin-gate .err-msg{ color:var(--coral-dark); font-family:'IBM Plex Mono',monospace; font-size:12.5px; min-height:16px; margin-top:2px; font-weight:600;}
+
+  .admin-head{ display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:8px; }
+  .admin-title{ font-family:'Space Grotesk',sans-serif; font-size:17px; font-weight:700; letter-spacing:.01em; color:var(--ink); }
+  .admin-title span{
+    background:linear-gradient(90deg, var(--gold-dark), var(--coral-dark));
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;
+  }
+
+  .controls{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .controls input[type="date"], .controls input[type="text"]{ margin:0; width:auto; padding:8px 10px; font-size:13px; }
+  .ghost-btn{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; text-transform:uppercase;
+    background:#fff; border:1.5px solid var(--line); color:var(--ink); padding:8px 12px;
+    border-radius:6px; cursor:pointer; white-space:nowrap; font-weight:600; transition:all .12s ease;
+  }
+  .ghost-btn:hover{border-color:var(--violet);color:var(--violet-dark); transform:translateY(-1px);}
+  .ghost-btn.danger{color:var(--coral-dark); border-color:#f3c6ce;}
+  .ghost-btn.danger:hover{border-color:var(--coral-dark);color:var(--coral-dark); background:#fff1f2;}
+  .ghost-btn.primary{ background:linear-gradient(135deg, var(--teal-light), var(--teal)); color:#fff; border-color:transparent; }
+  .ghost-btn.primary:hover{ opacity:.92; color:#fff; transform:translateY(-1px); }
+
+  .section-title{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.1em;
+    color:var(--teal); font-weight:700; margin:24px 0 10px;
+  }
+
+  table{ width:100%; border-collapse:collapse; font-family:'IBM Plex Mono',monospace; font-size:13px; }
+  thead th{
+    text-align:left; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--slate);
+    padding:0 10px 10px; border-bottom:2px solid var(--violet);
+  }
+  tbody td{ padding:11px 10px; border-bottom:1px solid var(--line); vertical-align:middle; }
+  tbody tr:hover{background:var(--paper-2);}
+  .badge{ display:inline-block; padding:4px 9px; border-radius:20px; font-size:11px; font-weight:700; letter-spacing:.03em; }
+  .badge.open{background:linear-gradient(135deg,#fde68a,#f5a524);color:#7a4a04;}
+  .badge.closed{background:linear-gradient(135deg,#99f6e4,#0d9488);color:#fff;}
+  .badge.leave{background:linear-gradient(135deg,#bfdbfe,#3b82f6);color:#fff;}
+  .empty-row td{ text-align:center; color:var(--slate); padding:30px 10px; font-family:'Inter',sans-serif; }
+  .name-cell b{font-family:'Inter',sans-serif;font-weight:600;color:var(--ink);}
+  .name-cell .idtxt{color:var(--slate);font-size:11.5px;}
+
+  footer{ text-align:center; color:#c7bfe0; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.05em; margin-top:26px; }
+
+  ::-webkit-scrollbar{height:8px;width:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--violet); border-radius:4px;}
+
+  @media (prefers-reduced-motion: reduce){
+    .stamp-btn.stamped::after{animation:none;opacity:0;}
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>Trade class Team attendance</h1>
+    </div>
+    <div class="clock">
+      <div class="time" id="clockTime">--:--:--</div>
+      <div class="date" id="clockDate">—</div>
+    </div>
+  </header>
+
+  <div class="grid">
+
+    <!-- LEFT COLUMN: employee-facing actions -->
+    <div class="stack">
+
+      <div class="panel punch-panel">
+        <p class="panel-label">Punch</p>
+        <select id="empSelect">
+          <option value="">Select employee…</option>
+        </select>
+        <div class="id-chip" id="idChip">Employee ID will appear here</div>
+        <div class="stamp-row">
+          <button class="stamp-btn in" id="btnIn" data-stamp="IN ✓" disabled>Punch In</button>
+          <button class="stamp-btn out" id="btnOut" data-stamp="OUT ✓" disabled>Punch Out</button>
+        </div>
+        <div class="status-line" id="statusLine">Pick your name to begin.</div>
+      </div>
+
+      <div class="panel leave-panel">
+        <p class="panel-label">Request Leave</p>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--slate);margin-bottom:14px;">
+          Uses the name selected above.
+        </div>
+        <label style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--slate);">From</label>
+        <input type="date" id="leaveFrom">
+        <label style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--slate);">To</label>
+        <input type="date" id="leaveTo">
+        <textarea id="leaveReason" placeholder="Reason (optional)"></textarea>
+        <button class="solid-btn" id="btnLeaveSubmit">Submit Leave Request</button>
+        <div class="status-line" id="leaveStatusLine"></div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: admin only -->
+    <div class="panel admin-panel">
+
+      <div id="adminGate" class="admin-gate">
+        <div class="lock">🔒</div>
+        <h2>Admin Sign-In Required</h2>
+        <input type="email" id="adminEmail" placeholder="Admin email" autocomplete="username">
+        <input type="password" id="adminPass" placeholder="Password" autocomplete="current-password">
+        <button class="solid-btn gold" id="btnAdminLogin">Sign In</button>
+        <div class="err-msg" id="adminErr"></div>
+      </div>
+
+      <div id="adminContent" style="display:none;">
+
+        <div class="admin-head">
+          <div class="admin-title">Attendance <span>Ledger</span></div>
+          <div class="controls">
+            <input type="text" id="searchBox" placeholder="Search name or ID…">
+            <input type="date" id="dateFilter">
+            <button class="ghost-btn" id="btnToday">Today</button>
+            <button class="ghost-btn primary" id="btnExport">Export Excel</button>
+            <button class="ghost-btn danger" id="btnClear">Clear Attendance</button>
+            <button class="ghost-btn" id="btnLogout">Log Out</button>
+          </div>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Employee</th><th>Date</th><th>Time In</th><th>Time Out</th><th>Duration</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="ledgerBody">
+              <tr class="empty-row"><td colspan="6">No punches yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="admin-head" style="margin-top:10px;">
+          <div class="section-title" style="margin:0;">Leave Requests</div>
+          <div class="controls">
+            <button class="ghost-btn danger" id="btnClearLeaves">Clear Leaves</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr><th>Employee</th><th>From</th><th>To</th><th>Reason</th><th>Applied On</th></tr>
+            </thead>
+            <tbody id="leaveBody">
+              <tr class="empty-row"><td colspan="5">No leave requests yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<!-- SheetJS for Excel export -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<script>
+(function(){
+  "use strict";
+
+  // ======================================================================
+  // 1) PASTE YOUR FIREBASE CONFIG HERE
+  // ======================================================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyAb7v3o4tPr3wy6oiPsEziLFQAFh5yj2z4",
+    authDomain: "team-attendance-ae0b0.firebaseapp.com",
+    projectId: "team-attendance-ae0b0",
+    storageBucket: "team-attendance-ae0b0.firebasestorage.app",
+    messagingSenderId: "703733886216",
+    appId: "1:703733886216:web:ceefbe62e1ec06e17690bd"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+  const attendanceRef = db.collection("attendance");
+  const leavesRef = db.collection("leaves");
+
+  // ---------- Roster ----------
+  const ROSTER = [
+    {name:"Sabarish", id:"BASA4008"},
+    {name:"Maharaja", id:"KAMA4017"},
+    {name:"Shobana", id:"PASH4021"},
+    {name:"Ramya", id:"VIRA4004"},
+    {name:"Keervani", id:"GKE5001"},
+    {name:"Thulasi Dharan", id:"DHTH4001"},
+    {name:"Brintha", id:"TBR2001"},
+    {name:"Riyaz", id:"AHRI2001"},
+    {name:"Akshaya", id:"DEAK5003"},
+    {name:"Kaviya", id:"BKA5001"},
+    {name:"Saran", id:"CHSA2011"},
+    {name:"Mrithika", id:"MMR5001"},
+    {name:"Surya", id:"SSU5001"},
+    {name:"Diwagar", id:"CDH5001"},
+    {name:"Jeyaraj", id:"KRJE9001"},
+    {name:"Sweatha", id:"SSW4002"},
+    {name:"Thowfeeq", id:"HUTH5002"},
+    {name:"Shakthi", id:"SSA6003"},
+    {name:"Mayuri", id:"JAMA4004"},
+    {name:"Anthonia", id:"INAN0001"},
+    {name:"Dhinesh", id:"MDH4001"},
+    {name:"Varun", id:"KVA5001"}
+  ].sort((a,b)=>a.name.localeCompare(b.name));
+
+  // ---------- State (admin only, populated after login) ----------
+  let log = [];
+  let leaveLog = [];
+  let unsubAttendance = null;
+  let unsubLeaves = null;
+
+  // ---------- DOM refs ----------
+  const empSelect   = document.getElementById("empSelect");
+  const idChip      = document.getElementById("idChip");
+  const btnIn       = document.getElementById("btnIn");
+  const btnOut      = document.getElementById("btnOut");
+  const statusLine  = document.getElementById("statusLine");
+  const ledgerBody  = document.getElementById("ledgerBody");
+  const leaveBody   = document.getElementById("leaveBody");
+  const searchBox   = document.getElementById("searchBox");
+  const dateFilter  = document.getElementById("dateFilter");
+
+  const leaveFrom   = document.getElementById("leaveFrom");
+  const leaveTo     = document.getElementById("leaveTo");
+  const leaveReason = document.getElementById("leaveReason");
+  const btnLeaveSubmit = document.getElementById("btnLeaveSubmit");
+  const leaveStatusLine = document.getElementById("leaveStatusLine");
+
+  const adminGate    = document.getElementById("adminGate");
+  const adminContent = document.getElementById("adminContent");
+  const adminEmail   = document.getElementById("adminEmail");
+  const adminPass    = document.getElementById("adminPass");
+  const adminErr     = document.getElementById("adminErr");
+
+  // ---------- Populate roster ----------
+  ROSTER.forEach(emp=>{
+    const opt = document.createElement("option");
+    opt.value = emp.id;
+    opt.textContent = `${emp.name} — ${emp.id}`;
+    empSelect.appendChild(opt);
+  });
+
+  function findEmp(id){ return ROSTER.find(e=>e.id === id); }
+  function todayStr(){
+    const d = new Date();
+    return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  }
+  function timeStr(d){ return d.toLocaleTimeString([], {hour:"2-digit", minute:"2-digit", second:"2-digit"}); }
+  function dateLabel(iso){ if(!iso) return "—"; const [y,m,dd] = iso.split("-"); return `${dd}/${m}/${y}`; }
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  }
+
+  // ---------- Clock ----------
+  function tickClock(){
+    const now = new Date();
+    document.getElementById("clockTime").textContent = timeStr(now);
+    document.getElementById("clockDate").textContent = now.toLocaleDateString([], {weekday:"long", year:"numeric", month:"long", day:"numeric"});
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  // ---------- Employee: punch status (single-doc read, allowed for everyone) ----------
+  empSelect.addEventListener("change", ()=>{
+    const emp = findEmp(empSelect.value);
+    if(!emp){
+      idChip.innerHTML = "Employee ID will appear here";
+      btnIn.disabled = true; btnOut.disabled = true;
+      setStatus("Pick your name to begin.");
+      return;
+    }
+    idChip.innerHTML = `<b>${escapeHtml(emp.name)}</b> &nbsp;·&nbsp; ID: <b>${escapeHtml(emp.id)}</b>`;
+    refreshButtonState(emp);
+  });
+
+  function refreshButtonState(emp){
+    btnIn.disabled = true; btnOut.disabled = true;
+    setStatus("Checking today's status…");
+    attendanceRef.doc(`${emp.id}_${todayStr()}`).get().then(doc=>{
+      if(empSelect.value !== emp.id) return; // selection changed while awaiting
+      if(!doc.exists){
+        btnIn.disabled = false; btnOut.disabled = true;
+        setStatus(`${emp.name} has not punched in today.`);
+      } else {
+        const entry = doc.data();
+        if(!entry.timeOut){
+          btnIn.disabled = true; btnOut.disabled = false;
+          setStatus(`${emp.name} punched in at ${entry.timeIn}. Awaiting punch out.`, "ok");
+        } else {
+          btnIn.disabled = true; btnOut.disabled = true;
+          setStatus(`${emp.name} already completed today's attendance (${entry.timeIn} → ${entry.timeOut}).`, "ok");
+        }
+      }
+    }).catch(err=>{
+      console.error(err);
+      setStatus("Could not check status — check your connection.", "err");
+    });
+  }
+
+  function setStatus(msg, kind){
+    statusLine.textContent = msg;
+    statusLine.className = "status-line" + (kind ? " "+kind : "");
+  }
+  function setLeaveStatus(msg, kind){
+    leaveStatusLine.textContent = msg;
+    leaveStatusLine.className = "status-line" + (kind ? " "+kind : "");
+  }
+
+  // ---------- Punch actions ----------
+  btnIn.addEventListener("click", ()=>{
+    const emp = findEmp(empSelect.value);
+    if(!emp) return;
+    btnIn.disabled = true;
+    const docId = `${emp.id}_${todayStr()}`;
+    attendanceRef.doc(docId).set({
+      id: emp.id, name: emp.name, date: todayStr(),
+      timeIn: timeStr(new Date()), timeInRaw: Date.now(),
+      timeOut: null, timeOutRaw: null
+    }).then(()=>{
+      animateStamp(btnIn);
+      refreshButtonState(emp);
+    }).catch(err=>{
+      console.error(err);
+      setStatus("Could not save the punch — check your connection and try again.", "err");
+      refreshButtonState(emp);
+    });
+  });
+
+  btnOut.addEventListener("click", ()=>{
+    const emp = findEmp(empSelect.value);
+    if(!emp) return;
+    btnOut.disabled = true;
+    const docId = `${emp.id}_${todayStr()}`;
+    attendanceRef.doc(docId).update({
+      timeOut: timeStr(new Date()), timeOutRaw: Date.now()
+    }).then(()=>{
+      animateStamp(btnOut);
+      refreshButtonState(emp);
+    }).catch(err=>{
+      console.error(err);
+      setStatus("Could not save the punch — check your connection and try again.", "err");
+      refreshButtonState(emp);
+    });
+  });
+
+  function animateStamp(btn){
+    btn.classList.remove("stamped");
+    void btn.offsetWidth;
+    btn.classList.add("stamped");
+    setTimeout(()=>btn.classList.remove("stamped"), 950);
+  }
+
+  function formatDuration(inRaw, outRaw){
+    if(!outRaw) return "—";
+    const mins = Math.max(0, Math.round((outRaw - inRaw)/60000));
+    return `${Math.floor(mins/60)}h ${mins%60}m`;
+  }
+
+  // ---------- Leave request (create-only, allowed for everyone) ----------
+  btnLeaveSubmit.addEventListener("click", ()=>{
+    const emp = findEmp(empSelect.value);
+    if(!emp){ setLeaveStatus("Select your name in the Punch panel first.", "err"); return; }
+    if(!leaveFrom.value || !leaveTo.value){ setLeaveStatus("Pick both a from and to date.", "err"); return; }
+    if(leaveTo.value < leaveFrom.value){ setLeaveStatus("'To' date can't be before 'From' date.", "err"); return; }
+
+    btnLeaveSubmit.disabled = true;
+    leavesRef.add({
+      id: emp.id, name: emp.name,
+      fromDate: leaveFrom.value, toDate: leaveTo.value,
+      reason: leaveReason.value.trim(),
+      appliedOn: todayStr(), appliedAtRaw: Date.now()
+    }).then(()=>{
+      setLeaveStatus(`Leave request submitted for ${emp.name}.`, "ok");
+      leaveFrom.value = ""; leaveTo.value = ""; leaveReason.value = "";
+    }).catch(err=>{
+      console.error(err);
+      setLeaveStatus("Could not submit — check your connection and try again.", "err");
+    }).finally(()=>{
+      btnLeaveSubmit.disabled = false;
+    });
+  });
+
+  // ---------- Admin: sign in / out ----------
+  document.getElementById("btnAdminLogin").addEventListener("click", ()=>{
+    adminErr.textContent = "";
+    const email = adminEmail.value.trim();
+    const pass = adminPass.value;
+    if(!email || !pass){ adminErr.textContent = "Enter email and password."; return; }
+    auth.signInWithEmailAndPassword(email, pass).catch(err=>{
+      adminErr.textContent = "Sign-in failed — check the email and password.";
+      console.error(err);
+    });
+  });
+
+  document.getElementById("btnLogout").addEventListener("click", ()=>{
+    auth.signOut();
+  });
+
+  auth.onAuthStateChanged(user=>{
+    if(user){
+      adminGate.style.display = "none";
+      adminContent.style.display = "block";
+      adminEmail.value = ""; adminPass.value = ""; adminErr.textContent = "";
+      attachAdminListeners();
+    } else {
+      adminGate.style.display = "block";
+      adminContent.style.display = "none";
+      detachAdminListeners();
+      log = []; leaveLog = [];
+    }
+  });
+
+  function attachAdminListeners(){
+    unsubAttendance = attendanceRef.orderBy("timeInRaw","desc").onSnapshot(snap=>{
+      log = snap.docs.map(d=>d.data());
+      renderLedger();
+    }, err=>console.error(err));
+
+    unsubLeaves = leavesRef.orderBy("appliedAtRaw","desc").onSnapshot(snap=>{
+      leaveLog = snap.docs.map(d=>d.data());
+      renderLeaveTable();
+    }, err=>console.error(err));
+  }
+  function detachAdminListeners(){
+    if(unsubAttendance){ unsubAttendance(); unsubAttendance = null; }
+    if(unsubLeaves){ unsubLeaves(); unsubLeaves = null; }
+  }
+
+  // ---------- Ledger rendering (admin only) ----------
+  function renderLedger(){
+    const q = searchBox.value.trim().toLowerCase();
+    const dFilter = dateFilter.value;
+    let rows = log.filter(r=>{
+      if(dFilter && r.date !== dFilter) return false;
+      if(q && !(r.name.toLowerCase().includes(q) || r.id.toLowerCase().includes(q))) return false;
+      return true;
+    });
+    if(rows.length === 0){
+      ledgerBody.innerHTML = `<tr class="empty-row"><td colspan="6">No entries match.</td></tr>`;
+    } else {
+      ledgerBody.innerHTML = rows.map(r=>`
+        <tr>
+          <td class="name-cell"><b>${escapeHtml(r.name)}</b><br><span class="idtxt">${escapeHtml(r.id)}</span></td>
+          <td>${dateLabel(r.date)}</td>
+          <td>${r.timeIn}</td>
+          <td>${r.timeOut ? r.timeOut : "—"}</td>
+          <td>${formatDuration(r.timeInRaw, r.timeOutRaw)}</td>
+          <td>${r.timeOut ? '<span class="badge closed">Complete</span>' : '<span class="badge open">In progress</span>'}</td>
+        </tr>`).join("");
+    }
+  }
+  searchBox.addEventListener("input", renderLedger);
+  dateFilter.addEventListener("change", renderLedger);
+  document.getElementById("btnToday").addEventListener("click", ()=>{
+    dateFilter.value = ""; searchBox.value = ""; renderLedger();
+  });
+
+  function renderLeaveTable(){
+    if(leaveLog.length === 0){
+      leaveBody.innerHTML = `<tr class="empty-row"><td colspan="5">No leave requests yet.</td></tr>`;
+      return;
+    }
+    leaveBody.innerHTML = leaveLog.map(r=>`
+      <tr>
+        <td class="name-cell"><b>${escapeHtml(r.name)}</b><br><span class="idtxt">${escapeHtml(r.id)}</span></td>
+        <td>${dateLabel(r.fromDate)}</td>
+        <td>${dateLabel(r.toDate)}</td>
+        <td>${escapeHtml(r.reason || "—")}</td>
+        <td>${dateLabel(r.appliedOn)}</td>
+      </tr>`).join("");
+  }
+
+  // ---------- Export to Excel (admin only) ----------
+  document.getElementById("btnExport").addEventListener("click", ()=>{
+    if(log.length === 0 && leaveLog.length === 0) return;
+
+    const attRows = log.map(r=>({
+      Name:r.name, ID:r.id, Date:r.date, "Time In":r.timeIn, "Time Out":r.timeOut || "",
+      Duration:formatDuration(r.timeInRaw, r.timeOutRaw), Status:r.timeOut ? "Complete" : "In progress"
+    }));
+    const leaveRows = leaveLog.map(r=>({
+      Name:r.name, ID:r.id, From:r.fromDate, To:r.toDate, Reason:r.reason || "", "Applied On":r.appliedOn
+    }));
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(attRows), "Attendance");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(leaveRows), "Leave Requests");
+    XLSX.writeFile(wb, `attendance_export_${todayStr()}.xlsx`);
+  });
+
+  // ---------- Clear (admin only) ----------
+  document.getElementById("btnClear").addEventListener("click", ()=>{
+    if(log.length === 0) return;
+    if(!confirm("Delete every attendance record for the whole team? This cannot be undone.")) return;
+    const batch = db.batch();
+    attendanceRef.get().then(snap=>{
+      snap.docs.forEach(d=>batch.delete(d.ref));
+      return batch.commit();
+    }).catch(err=>console.error(err));
+  });
+
+  document.getElementById("btnClearLeaves").addEventListener("click", ()=>{
+    if(leaveLog.length === 0) return;
+    if(!confirm("Delete every leave request for the whole team? This cannot be undone.")) return;
+    const batch = db.batch();
+    leavesRef.get().then(snap=>{
+      snap.docs.forEach(d=>batch.delete(d.ref));
+      return batch.commit();
+    }).catch(err=>console.error(err));
+  });
+
+})();
+</script>
+</body>
+</html>
