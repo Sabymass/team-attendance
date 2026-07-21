@@ -51,7 +51,7 @@
     background:linear-gradient(90deg, #c4b5fd 0%, #fda4af 45%, #fcd34d 100%);
     -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;
   }
-  .clock{ font-family:'IBM Plex Mono',monospace; text-align:right; }
+  .clock{ font-family:'Inter',sans-serif; text-align:right; }
   .clock .time{
     font-size:26px;font-weight:600;color:var(--paper);
     text-shadow:0 0 18px rgba(124,58,237,.55);
@@ -74,9 +74,17 @@
 
   .punch-panel, .leave-panel{ padding:26px 24px 28px; }
   .panel-label{
-    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase;
-    color:var(--slate); margin:0 0 14px; display:flex; align-items:center; gap:8px; font-weight:600;
-  }
+    font-family:'Poppins',sans-serif;
+    font-size:17px;
+    font-weight:600;
+    color:var(--slate);
+    margin:0 0 18px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    letter-spacing:0.3px;
+    text-transform:none;
+}
   .punch-panel .panel-label{color:var(--violet-dark);}
   .leave-panel .panel-label{color:var(--teal);}
   .panel-label::after{ content:''; flex:1; height:1px; background:var(--line); }
@@ -93,16 +101,16 @@
   button:focus-visible{ outline:2px solid var(--violet); outline-offset:2px; }
 
   .id-chip{
-    font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--slate);
-    background:var(--paper-2); border:1px dashed #c9b8e6; border-radius:6px;
-    padding:8px 10px; margin-bottom:16px; min-height:16px;
+    font-family:'Inter',sans-serif; font-size:14px; font-weight:500; color:var(--slate);
+    background:var(--paper-2); border:1px dashed #c9b8e6; border-radius:8px;
+    padding:10px 12px; margin-bottom:16px; min-height:20px;
   }
   .id-chip b{color:var(--violet-dark);}
 
   .stamp-row{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:6px; }
   .stamp-btn{
-    position:relative; font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:14px;
-    letter-spacing:.06em; text-transform:uppercase; padding:16px 8px; border-radius:8px;
+    position:relative; font-family:'Inter',sans-serif; font-weight:600; font-size:15px;
+    letter-spacing:.02em; text-transform:none; padding:16px 8px; border-radius:10px;
     border:none; cursor:pointer; color:#fff; overflow:hidden;
     transition:transform .12s ease, box-shadow .12s ease;
   }
@@ -123,15 +131,15 @@
     100%{opacity:0;}
   }
 
-  .status-line{ font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--slate); margin-top:12px; min-height:18px; }
+  .status-line{ font-family:'Inter',sans-serif; font-size:13px; font-weight:500; color:var(--slate); margin-top:12px; min-height:18px; }
   .status-line.err{color:var(--coral-dark); font-weight:600;}
   .status-line.ok{color:var(--teal); font-weight:600;}
 
   .solid-btn{
-    font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:700; letter-spacing:.05em;
-    text-transform:uppercase; padding:13px; width:100%; border:none; border-radius:8px;
+    font-family:'Inter',sans-serif; font-size:15px; font-weight:600; letter-spacing:.02em;
+    text-transform:none; padding:14px; width:100%; border:none; border-radius:10px;
     background:linear-gradient(135deg, var(--violet), var(--violet-dark)); color:#fff; cursor:pointer;
-    box-shadow:0 10px 22px -10px rgba(124,58,237,.7); transition:transform .12s ease;
+    box-shadow:0 12px 24px -12px rgba(124,58,237,.6); transition:transform .12s ease;
   }
   .solid-btn:hover{ transform:translateY(-1px); }
   .solid-btn.gold{ background:linear-gradient(135deg, var(--gold), var(--gold-dark)); box-shadow:0 10px 22px -10px rgba(194,118,10,.7); }
@@ -142,8 +150,8 @@
   .admin-gate{ max-width:340px; margin:20px auto; text-align:center; padding:20px 0 6px; }
   .admin-gate .lock{ font-size:30px; margin-bottom:6px; }
   .admin-gate h2{
-    font-family:'IBM Plex Mono',monospace; font-size:15px; text-transform:uppercase;
-    letter-spacing:.08em; margin:0 0 18px; color:var(--gold-dark); font-weight:700;
+    font-family:'Space Grotesk',sans-serif; font-size:22px; text-transform:none;
+    letter-spacing:0; margin:0 0 18px; color:var(--gold-dark); font-weight:700;
   }
   .admin-gate .err-msg{ color:var(--coral-dark); font-family:'IBM Plex Mono',monospace; font-size:12.5px; min-height:16px; margin-top:2px; font-weight:600;}
 
@@ -157,9 +165,9 @@
   .controls{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
   .controls input[type="date"], .controls input[type="text"]{ margin:0; width:auto; padding:8px 10px; font-size:13px; }
   .ghost-btn{
-    font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; text-transform:uppercase;
-    background:#fff; border:1.5px solid var(--line); color:var(--ink); padding:8px 12px;
-    border-radius:6px; cursor:pointer; white-space:nowrap; font-weight:600; transition:all .12s ease;
+    font-family:'Inter',sans-serif; font-size:13px; letter-spacing:0; text-transform:none;
+    background:#fff; border:1.5px solid var(--line); color:var(--ink); padding:10px 14px;
+    border-radius:8px; cursor:pointer; white-space:nowrap; font-weight:600; transition:all .12s ease;
   }
   .ghost-btn:hover{border-color:var(--violet);color:var(--violet-dark); transform:translateY(-1px);}
   .ghost-btn.danger{color:var(--coral-dark); border-color:#f3c6ce;}
@@ -168,9 +176,14 @@
   .ghost-btn.primary:hover{ opacity:.92; color:#fff; transform:translateY(-1px); }
 
   .section-title{
-    font-family:'IBM Plex Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.1em;
-    color:var(--teal); font-weight:700; margin:24px 0 10px;
-  }
+    font-family:'Poppins', sans-serif;
+    font-size:18px;
+    font-weight:600;
+    color:#5B21B6;
+    letter-spacing:0.5px;
+    text-transform:none;
+    margin:20px 0 14px;
+}
 
   table{ width:100%; border-collapse:collapse; font-family:'IBM Plex Mono',monospace; font-size:13px; }
   thead th{
@@ -187,7 +200,7 @@
   .name-cell b{font-family:'Inter',sans-serif;font-weight:600;color:var(--ink);}
   .name-cell .idtxt{color:var(--slate);font-size:11.5px;}
 
-  footer{ text-align:center; color:#c7bfe0; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.05em; margin-top:26px; }
+  footer{ text-align:center; color:#c7bfe0; font-family:'Inter',sans-serif; font-size:12px; letter-spacing:0; margin-top:26px; }
 
   ::-webkit-scrollbar{height:8px;width:8px;}
   ::-webkit-scrollbar-thumb{background:var(--violet); border-radius:4px;}
@@ -222,13 +235,35 @@
           <option value="">Select employee…</option>
         </select>
         <div class="id-chip" id="idChip">Employee ID will appear here</div>
-        <label style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--slate);">Work Mode</label>
+        <label style="font-size:13px;font-family:'Inter',sans-serif;font-weight:500;color:var(--slate);margin-bottom:6px;display:block;">Work Mode</label>
         <select id="workMode">
           <option value="WFO">WFO</option>
           <option value="WFH">WFH</option>
         </select>
 
+        
+        <label style="font-size:13px;font-family:'Inter',sans-serif;font-weight:500;color:var(--slate);margin-bottom:6px;display:block;">Permission (Optional)</label>
+        <select id="permissionType">
+          <option value="">No Permission</option>
+          <option>Official</option>
+          <option>Personal</option>
+          <option>Medical</option>
+        </select>
+
+        <select id="permissionHours">
+          <option value="">Hours</option>
+          <option>1 Hour</option>
+          <option>2 Hours</option>
+          <option>3 Hours</option>
+          <option>Half Day</option>
+        </select>
+
+        <textarea id="permissionReason" placeholder="Permission reason (optional)"></textarea>
+        <button class="solid-btn" id="btnPermission" style="margin-bottom:14px;">Submit Permission</button>
+        <div class="status-line" id="permissionStatus"></div>
+
         <div class="stamp-row">
+
           <button class="stamp-btn in" id="btnIn" data-stamp="IN ✓" disabled>Punch In</button>
           <button class="stamp-btn out" id="btnOut" data-stamp="OUT ✓" disabled>Punch Out</button>
         </div>
@@ -237,14 +272,27 @@
 
       <div class="panel leave-panel">
         <p class="panel-label">Request Leave</p>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--slate);margin-bottom:14px;">
+        <div style="font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:var(--slate);margin-bottom:14px;">
           Uses the name selected above.
         </div>
-        <label style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--slate);">From</label>
-        <input type="date" id="leaveFrom">
-        <label style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--slate);">To</label>
-        <input type="date" id="leaveTo">
-        <label style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--slate);">Leave Type</label>
+        <label style="font-size:13px;font-family:'Inter',sans-serif;font-weight:500;color:var(--slate);margin-bottom:6px;display:block;">Leave Duration</label>
+        <select id="leaveDuration">
+          <option value="single">Single Day</option>
+          <option value="multiple">Multiple Days</option>
+        </select>
+
+        <div id="singleLeaveDateWrap">
+          <label style="font-size:13px;font-family:'Inter',sans-serif;font-weight:500;color:var(--slate);margin-bottom:6px;display:block;">Leave Date</label>
+          <input type="date" id="leaveDate">
+        </div>
+
+        <div id="multipleLeaveDateWrap" style="display:none;">
+          <label style="font-size:13px;font-family:'Inter',sans-serif;font-weight:500;color:var(--slate);margin-bottom:6px;display:block;">From</label>
+          <input type="date" id="leaveFrom">
+          <label style="font-size:13px;font-family:'Inter',sans-serif;font-weight:500;color:var(--slate);margin-bottom:6px;display:block;">To</label>
+          <input type="date" id="leaveTo">
+        </div>
+        <label style="font-size:13px;font-family:'Inter',sans-serif;font-weight:500;color:var(--slate);margin-bottom:6px;display:block;">Leave Type</label>
         <select id="leaveType">
           <option value="Planned">Planned</option>
           <option value="Medical">Medical</option>
@@ -348,6 +396,7 @@
   const auth = firebase.auth();
   const attendanceRef = db.collection("attendance");
   const leavesRef = db.collection("leaves");
+  const permissionsRef = db.collection("permissions");
 
   // ---------- Roster ----------
   const ROSTER = [
@@ -392,8 +441,15 @@
   const searchBox   = document.getElementById("searchBox");
   const dateFilter  = document.getElementById("dateFilter");
 
+  const leaveDuration = document.getElementById("leaveDuration");
+  const leaveDate   = document.getElementById("leaveDate");
   const leaveFrom   = document.getElementById("leaveFrom");
   const leaveTo     = document.getElementById("leaveTo");
+
+  leaveDuration.addEventListener("change", ()=>{
+    document.getElementById("singleLeaveDateWrap").style.display = leaveDuration.value === "single" ? "block" : "none";
+    document.getElementById("multipleLeaveDateWrap").style.display = leaveDuration.value === "multiple" ? "block" : "none";
+  });
   const leaveReason = document.getElementById("leaveReason");
   const btnLeaveSubmit = document.getElementById("btnLeaveSubmit");
   const leaveStatusLine = document.getElementById("leaveStatusLine");
@@ -485,10 +541,18 @@
     btnIn.disabled = true;
     const docId = `${emp.id}_${todayStr()}`;
     attendanceRef.doc(docId).set({
-      id: emp.id, name: emp.name, date: todayStr(),
-      timeIn: timeStr(new Date()), timeInRaw: Date.now(),
-      timeOut: null, timeOutRaw: null,
-      workMode: document.getElementById("workMode").value
+      id: emp.id,
+      name: emp.name,
+      date: todayStr(),
+      timeIn: timeStr(new Date()),
+      timeInRaw: Date.now(),
+     timeOut: null,
+     timeOutRaw: null,
+     workMode: document.getElementById("workMode").value,
+
+     permissionType: document.getElementById("permissionType")?.value || "",
+     permissionHours: document.getElementById("permissionHours")?.value || "",
+     permissionReason: document.getElementById("permissionReason")?.value || ""
     }).then(()=>{
       animateStamp(btnIn);
       refreshButtonState(emp);
@@ -528,24 +592,111 @@
     const mins = Math.max(0, Math.round((outRaw - inRaw)/60000));
     return `${Math.floor(mins/60)}h ${mins%60}m`;
   }
+  function permissionToMinutes(permission){
+
+switch(permission){
+
+    case "1 Hour":
+        return 60;
+
+    case "2 Hours":
+        return 120;
+
+    case "3 Hours":
+        return 180;
+
+    case "Half Day":
+        return 270;
+
+    default:
+        return 0;
+
+}
+
+}
+function calculateAttendance(inRaw,outRaw,permission){
+
+if(!outRaw){
+
+    return{
+
+        worked:"—",
+        total:"—",
+        overtime:"0m",
+        lessTime:"0m"
+
+    }
+
+}
+
+const worked=Math.round((outRaw-inRaw)/60000);
+
+const permissionMinutes=permissionToMinutes(permission);
+
+const totalWorked=worked+permissionMinutes;
+
+const SHIFT=540;
+
+let overtime=0;
+
+let less=0;
+
+if(totalWorked>SHIFT){
+
+    overtime=totalWorked-SHIFT;
+
+}
+
+if(totalWorked<SHIFT){
+
+    less=SHIFT-totalWorked;
+
+}
+
+return{
+
+    worked:
+    Math.floor(worked/60)+"h "+worked%60+"m",
+
+    total:
+    Math.floor(totalWorked/60)+"h "+totalWorked%60+"m",
+
+    overtime:
+    Math.floor(overtime/60)+"h "+overtime%60+"m",
+
+    lessTime:
+    Math.floor(less/60)+"h "+less%60+"m"
+
+}
+
+}
 
   // ---------- Leave request (create-only, allowed for everyone) ----------
   btnLeaveSubmit.addEventListener("click", ()=>{
     const emp = findEmp(empSelect.value);
     if(!emp){ setLeaveStatus("Select your name in the Punch panel first.", "err"); return; }
-    if(!leaveFrom.value || !leaveTo.value){ setLeaveStatus("Pick both a from and to date.", "err"); return; }
-    if(leaveTo.value < leaveFrom.value){ setLeaveStatus("'To' date can't be before 'From' date.", "err"); return; }
+    let fromDate, toDate;
+    if(leaveDuration.value === "single"){
+      if(!leaveDate.value){ setLeaveStatus("Pick the leave date.", "err"); return; }
+      fromDate = leaveDate.value;
+      toDate = leaveDate.value;
+    } else {
+      if(!leaveFrom.value || !leaveTo.value){ setLeaveStatus("Pick both a from and to date.", "err"); return; }
+      if(leaveTo.value < leaveFrom.value){ setLeaveStatus("'To' date can't be before 'From' date.", "err"); return; }
+      fromDate = leaveFrom.value;
+      toDate = leaveTo.value;
+    }
 
     btnLeaveSubmit.disabled = true;
     leavesRef.add({
       id: emp.id, name: emp.name,
-      fromDate: leaveFrom.value, toDate: leaveTo.value,
+      fromDate, toDate,
       leaveType: document.getElementById("leaveType").value,
       reason: leaveReason.value.trim(),
       appliedOn: todayStr(), appliedAtRaw: Date.now()
     }).then(()=>{
       setLeaveStatus(`Leave request submitted for ${emp.name}.`, "ok");
-      leaveFrom.value = ""; leaveTo.value = ""; leaveReason.value = "";
+      leaveDate.value = ""; leaveFrom.value = ""; leaveTo.value = ""; leaveReason.value = "";
     }).catch(err=>{
       console.error(err);
       setLeaveStatus("Could not submit — check your connection and try again.", "err");
@@ -554,7 +705,32 @@
     });
   });
 
-  // ---------- Admin: sign in / out ----------
+  
+// ---------- Permission ----------
+const btnPermission=document.getElementById("btnPermission");
+btnPermission.addEventListener("click",()=>{
+ const emp=findEmp(empSelect.value);
+ const status=document.getElementById("permissionStatus");
+ if(!emp){status.textContent="Select employee first.";status.className="status-line err";return;}
+ permissionsRef.add({
+   id:emp.id,
+   name:emp.name,
+   permissionType:document.getElementById("permissionType").value,
+   hours:document.getElementById("permissionHours").value,
+   reason:document.getElementById("permissionReason").value.trim(),
+   date:todayStr(),
+   createdAt:Date.now()
+ }).then(()=>{
+   document.getElementById("permissionReason").value="";
+   status.textContent="Permission submitted.";
+   status.className="status-line ok";
+ }).catch(()=>{
+   status.textContent="Submission failed.";
+   status.className="status-line err";
+ });
+});
+
+// ---------- Admin: sign in / out ----------
   document.getElementById("btnAdminLogin").addEventListener("click", ()=>{
     adminErr.textContent = "";
     const email = adminEmail.value.trim();
@@ -650,17 +826,62 @@
   document.getElementById("btnExport").addEventListener("click", ()=>{
     if(log.length === 0 && leaveLog.length === 0) return;
 
-    const attRows = log.map(r=>({
-      Name:r.name, ID:r.id, Date:r.date, Mode:r.workMode||"WFO", "Time In":r.timeIn, "Time Out":r.timeOut || "",
-      Duration:formatDuration(r.timeInRaw, r.timeOutRaw), Status:r.timeOut ? "Complete" : "In progress"
-    }));
+    const combinedRows = [];
+
+    log.forEach(r=>{
+      const calc = calculateAttendance(r.timeInRaw, r.timeOutRaw, r.permissionHours);
+      combinedRows.push({
+        Name:r.name, ID:r.id, Date:r.date,
+        "Mode / Status":r.workMode || "WFO",
+        "Time In":r.timeIn || "", "Time Out":r.timeOut || "",
+        "Worked Hours":calc.worked,
+        "Permission Type":r.permissionType || "",
+        "Permission Hours":r.permissionHours || "",
+        "Permission Reason":r.permissionReason || "",
+        "Total Worked":calc.total,
+        Overtime:calc.overtime,
+        "Less Time":calc.lessTime,
+        Status:r.timeOut ? (calc.lessTime === "0h 0m" ? "Complete" : "Less Time") : "In progress"
+      });
+    });
+
+    // Expand every leave request into one row per calendar day.
+    leaveLog.forEach(r=>{
+      if(!r.fromDate || !r.toDate) return;
+      const current = new Date(r.fromDate + "T00:00:00");
+      const endDate = new Date(r.toDate + "T00:00:00");
+      while(current <= endDate){
+        const y=current.getFullYear(), m=String(current.getMonth()+1).padStart(2,"0"), d=String(current.getDate()).padStart(2,"0");
+        combinedRows.push({
+          Name:r.name, ID:r.id, Date:`${y}-${m}-${d}`,
+          "Mode / Status":`LEAVE - ${r.leaveType || "Planned"}`,
+          "Time In":"", "Time Out":"", "Worked Hours":"",
+          "Permission Type":"", "Permission Hours":"", "Permission Reason":"",
+          "Total Worked":"", Overtime:"", "Less Time":"",
+          Status:`LEAVE - ${r.leaveType || "Planned"}`
+        });
+        current.setDate(current.getDate()+1);
+      }
+    });
+
+    // Sort day-by-day, with attendance before leave for the same date.
+    combinedRows.sort((a,b)=>{
+      const dateCmp=(a.Date||"").localeCompare(b.Date||"");
+      if(dateCmp) return dateCmp;
+      const aLeave=String(a["Mode / Status"]).startsWith("LEAVE");
+      const bLeave=String(b["Mode / Status"]).startsWith("LEAVE");
+      if(aLeave !== bLeave) return aLeave ? 1 : -1;
+      return (a.Name||"").localeCompare(b.Name||"");
+    });
+
     const leaveRows = leaveLog.map(r=>({
-      Name:r.name, ID:r.id, "Leave Type":r.leaveType||"Planned", From:r.fromDate, To:r.toDate, Reason:r.reason || "", "Applied On":r.appliedOn
+      Name:r.name, ID:r.id, "Leave Type":r.leaveType||"Planned",
+      From:r.fromDate, To:r.toDate, Reason:r.reason||"", "Applied On":r.appliedOn
     }));
 
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(attRows), "Attendance");
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(leaveRows), "Leave Requests");
+    const wb=XLSX.utils.book_new();
+    const attendanceSheet=XLSX.utils.json_to_sheet(combinedRows);
+    XLSX.utils.book_append_sheet(wb, attendanceSheet, "Attendance");
     XLSX.writeFile(wb, `attendance_export_${todayStr()}.xlsx`);
   });
 
