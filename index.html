@@ -222,6 +222,12 @@
           <option value="">Select employee…</option>
         </select>
         <div class="id-chip" id="idChip">Employee ID will appear here</div>
+        <label style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--slate);">Work Mode</label>
+        <select id="workMode">
+          <option value="WFO">WFO</option>
+          <option value="WFH">WFH</option>
+        </select>
+
         <div class="stamp-row">
           <button class="stamp-btn in" id="btnIn" data-stamp="IN ✓" disabled>Punch In</button>
           <button class="stamp-btn out" id="btnOut" data-stamp="OUT ✓" disabled>Punch Out</button>
@@ -238,6 +244,13 @@
         <input type="date" id="leaveFrom">
         <label style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--slate);">To</label>
         <input type="date" id="leaveTo">
+        <label style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--slate);">Leave Type</label>
+        <select id="leaveType">
+          <option value="Planned">Planned</option>
+          <option value="Medical">Medical</option>
+          <option value="Emergency">Emergency</option>
+          <option value="Casual">Casual</option>
+        </select>
         <textarea id="leaveReason" placeholder="Reason (optional)"></textarea>
         <button class="solid-btn" id="btnLeaveSubmit">Submit Leave Request</button>
         <div class="status-line" id="leaveStatusLine"></div>
@@ -275,7 +288,7 @@
           <table>
             <thead>
               <tr>
-                <th>Employee</th><th>Date</th><th>Time In</th><th>Time Out</th><th>Duration</th><th>Status</th>
+                <th>Employee</th><th>Date</th><th>Mode</th><th>Time In</th><th>Time Out</th><th>Duration</th><th>Status</th>
               </tr>
             </thead>
             <tbody id="ledgerBody">
@@ -293,7 +306,7 @@
         <div style="overflow-x:auto;">
           <table>
             <thead>
-              <tr><th>Employee</th><th>From</th><th>To</th><th>Reason</th><th>Applied On</th></tr>
+              <tr><th>Employee</th><th>Leave Type</th><th>From</th><th>To</th><th>Reason</th><th>Applied On</th></tr>
             </thead>
             <tbody id="leaveBody">
               <tr class="empty-row"><td colspan="5">No leave requests yet.</td></tr>
@@ -474,7 +487,8 @@
     attendanceRef.doc(docId).set({
       id: emp.id, name: emp.name, date: todayStr(),
       timeIn: timeStr(new Date()), timeInRaw: Date.now(),
-      timeOut: null, timeOutRaw: null
+      timeOut: null, timeOutRaw: null,
+      workMode: document.getElementById("workMode").value
     }).then(()=>{
       animateStamp(btnIn);
       refreshButtonState(emp);
@@ -526,6 +540,7 @@
     leavesRef.add({
       id: emp.id, name: emp.name,
       fromDate: leaveFrom.value, toDate: leaveTo.value,
+      leaveType: document.getElementById("leaveType").value,
       reason: leaveReason.value.trim(),
       appliedOn: todayStr(), appliedAtRaw: Date.now()
     }).then(()=>{
@@ -601,6 +616,7 @@
         <tr>
           <td class="name-cell"><b>${escapeHtml(r.name)}</b><br><span class="idtxt">${escapeHtml(r.id)}</span></td>
           <td>${dateLabel(r.date)}</td>
+          <td>${r.workMode || "WFO"}</td>
           <td>${r.timeIn}</td>
           <td>${r.timeOut ? r.timeOut : "—"}</td>
           <td>${formatDuration(r.timeInRaw, r.timeOutRaw)}</td>
@@ -622,6 +638,7 @@
     leaveBody.innerHTML = leaveLog.map(r=>`
       <tr>
         <td class="name-cell"><b>${escapeHtml(r.name)}</b><br><span class="idtxt">${escapeHtml(r.id)}</span></td>
+        <td>${escapeHtml(r.leaveType || "Planned")}</td>
         <td>${dateLabel(r.fromDate)}</td>
         <td>${dateLabel(r.toDate)}</td>
         <td>${escapeHtml(r.reason || "—")}</td>
@@ -634,11 +651,11 @@
     if(log.length === 0 && leaveLog.length === 0) return;
 
     const attRows = log.map(r=>({
-      Name:r.name, ID:r.id, Date:r.date, "Time In":r.timeIn, "Time Out":r.timeOut || "",
+      Name:r.name, ID:r.id, Date:r.date, Mode:r.workMode||"WFO", "Time In":r.timeIn, "Time Out":r.timeOut || "",
       Duration:formatDuration(r.timeInRaw, r.timeOutRaw), Status:r.timeOut ? "Complete" : "In progress"
     }));
     const leaveRows = leaveLog.map(r=>({
-      Name:r.name, ID:r.id, From:r.fromDate, To:r.toDate, Reason:r.reason || "", "Applied On":r.appliedOn
+      Name:r.name, ID:r.id, "Leave Type":r.leaveType||"Planned", From:r.fromDate, To:r.toDate, Reason:r.reason || "", "Applied On":r.appliedOn
     }));
 
     const wb = XLSX.utils.book_new();
