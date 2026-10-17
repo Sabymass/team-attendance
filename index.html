@@ -487,10 +487,14 @@
           setStatus(`${emp.name} already completed today's attendance (${entry.timeIn} → ${entry.timeOut}).`, "ok");
         }
       }
-    }).catch(err=>{
-      console.error(err);
-      setStatus("Could not check status — check your connection.", "err");
-    });
+    }).catch(err => {
+  console.error("Attendance status check failed:", err.code, err.message);
+
+  setStatus(
+    `Status check failed: ${err.code || "unknown"} — ${err.message || "See console"}`,
+    "err"
+  );
+});
   }
 
   function setStatus(msg, kind){
